@@ -21,3 +21,7 @@ portfolio/
 │── style-switcher.js 
 │── images/ 
 │── resume/ 
+
+Live Demo Link:
+
+https://naveenapriya-06.github.io/my_portfolio/
