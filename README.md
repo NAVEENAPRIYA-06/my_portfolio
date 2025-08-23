@@ -21,7 +21,10 @@ portfolio/
 │── style-switcher.js 
 │── images/ 
 │── resume/ 
+<<<<<<< HEAD
 
 Live Demo Link:
 
 https://naveenapriya-06.github.io/my_portfolio/
+=======
+>>>>>>> 6417e91 (Added)
