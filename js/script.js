@@ -1,28 +1,33 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // 📌 Set current year
-  document.getElementById('year').textContent = new Date().getFullYear();
-
   // 📌 Theme toggle with preference persist
   const toggle = document.getElementById('theme-toggle');
   const applyTheme = (t) => document.documentElement.setAttribute('data-theme', t);
+  
+  // Logic to determine initial theme
   const stored = localStorage.getItem('theme') || 
                  (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-  applyTheme(stored);
-  toggle.textContent = stored === 'dark' ? '🌞' : '🌙';
+                 
+  if (stored === 'dark') {
+      document.body.classList.add('dark');
+  }
 
-  toggle.onclick = () => {
-    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    applyTheme(next);
-    localStorage.setItem('theme', next);
-    toggle.textContent = next === 'dark' ? '🌞' : '🌙';
-  };
+  if(toggle) {
+      toggle.textContent = stored === 'dark' ? '🌞' : '🌙';
+
+      toggle.onclick = () => {
+        document.body.classList.toggle('dark');
+        const isDark = document.body.classList.contains('dark');
+        const theme = isDark ? 'dark' : 'light';
+        localStorage.setItem('theme', theme);
+        toggle.textContent = isDark ? '🌞' : '🌙';
+      };
+  }
 
   // 📌 Mobile nav toggle
   const navToggle = document.getElementById('nav-toggle'), nav = document.getElementById('nav');
-  navToggle.addEventListener('click', () => nav.classList.toggle('open'));
-  nav.querySelectorAll('a').forEach(a => 
-    a.addEventListener('click', () => nav.classList.remove('open'))
-  );
+  if(navToggle) {
+      navToggle.addEventListener('click', () => nav.classList.toggle('open'));
+  }
 
   // 📌 Smooth scroll for anchor links
   document.querySelectorAll('a[href^="#"]').forEach(a => {
@@ -35,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 📌 Scroll reveal for .animate elements
+  // 📌 Scroll reveal animation
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -45,18 +50,39 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }, { threshold: 0.2 });
   document.querySelectorAll('.animate').forEach(el => observer.observe(el));
+
+  
+  /* =====================================================
+     📌 NEW: Active Link Switcher (Click Handler)
+     ===================================================== */
+  const navLinks = document.querySelectorAll('.aside .nav li a');
+  
+  navLinks.forEach(link => {
+      link.addEventListener('click', function() {
+          // 1. Remove 'active' class from ALL links
+          navLinks.forEach(nav => nav.classList.remove('active'));
+          
+          // 2. Add 'active' class to the CLICKED link
+          this.classList.add('active');
+
+          // 3. Close mobile menu if open
+          if(nav) nav.classList.remove('open');
+      });
+  });
+
 });
 
-// 📌 Modal Functions (Projects)
+// 📌 Modal Functions
 function openModal(id) {
-  document.getElementById(id).style.display = 'block';
+  const modal = document.getElementById(id);
+  if(modal) modal.style.display = 'block';
 }
 
 function closeModal(id) {
-  document.getElementById(id).style.display = 'none';
+  const modal = document.getElementById(id);
+  if(modal) modal.style.display = 'none';
 }
 
-// 📌 Close modal if clicked outside content
 window.onclick = function(event) {
   if (event.target.classList.contains('modal')) {
     event.target.style.display = 'none';
